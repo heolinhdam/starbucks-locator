@@ -2,9 +2,9 @@
 Class: CS2230 -- Section 001
 Name: Phan Anh Nguyen
 Description: Hơmework 7 - Starbucks Store finder
-I pledge that I have completed the programming assignment independently. 
+I pledge that I have completed the programming assignment independently.
 I have not copied the code from a student or any source.
-I have not given my code to any student. 
+I have not given my code to any student.
 """
 import pandas as pd
 from pandas import DataFrame, read_csv
@@ -41,7 +41,7 @@ class Store(object):
     #try if there is a column distance, if not distance =-1
         try:
             self.distance = row[1][9]
-        except:
+        except Exception:
             self.distance = -1
     #print out the store info
     def __str__ (self):
@@ -54,7 +54,6 @@ class Store(object):
 
 
 def getData():
-
     df = pd.read_csv(STARBUCKS_FILE)
     df = df.filter(FILTERS)
     return df
@@ -79,7 +78,7 @@ def displayMap(dfStores):
 
     foliumMap = folium.Map( location = [avg_lat, avg_lon], zoom_start=11)
 
-    for i in range(len(lats)):
+    for i,item in enumerate(lats):
         # plot each lat, lon, and name on the map
         lat = lats[i]
         lon = lons[i]
@@ -118,18 +117,18 @@ def dfDisplay(df):
 def findStoresByCityState(dfStores):
     while True:
         city = input("Enter a city: ").lower()
-        state = input("Enter a state abbreviation: ")
+        state = input("Enter a state abbreviation: ").lower()
         if city == "" or state == "":
             print("Error. Enter a city and a state.")
         else:
             break
     # filter dfStores by City
-    df = dfStores.loc[dfStores['City'] == city]
+    df = dfStores[dfStores['City'].str.lower() == city]
     # filter the result by State
-    df = df.loc[df.State == state]
+    df = df.loc[df.State.str.lower() == state]
     # if no stores are found, print a message,
-    if df.empty == True:
-        print("Error. No stores are found")
+    if df.empty is True:
+        print("Error. No stores are found \n")
     # otherwise print the list and the map
     else:
         dfDisplay(df)
@@ -146,9 +145,9 @@ def latlongbycitysearch(city,state):
     return lat,long
 
 #search lat and long function by zip
-def latlongbyzipsearch(zip):
+def latlongbyzipsearch(zipy):
     search = SearchEngine()
-    zipcode = search.by_zipcode(zip).to_dict()
+    zipcode = search.by_zipcode(zipy).to_dict()
     lat = zipcode["lat"]
     long = zipcode ["lng"]
     return lat,long
@@ -173,17 +172,17 @@ def findStoresWithinDistanceCityState(dfStores):
 # find the latitude/longitude for the city state
     try:
         lat,long = latlongbycitysearch(homeCity,state)
-    except:
+    except Exception:
         print("Error. Invalid city or state\n")
         return
 # create a list of stores within specified number of miles
     data = search.by_coordinates(lat,long,radius=miles,returns=0)
     #append to a list
-    list = []
+    ziplist = []
     for i in data:
         a = i.to_dict()
-        list.append(a["zipcode"])
-    df = dfStores[dfStores["Zip"].str.contains("|".join(list),na=False)].copy()
+        ziplist.append(a["zipcode"])
+    df = dfStores[dfStores["Zip"].str.contains("|".join(ziplist),na=False)].copy()
 # calculate the distance from each store to the home city/state,
     distances = []
     for row in df.iterrows():
@@ -197,8 +196,17 @@ def findStoresWithinDistanceCityState(dfStores):
 # if showing only drive-thrus, filter the results before displaying the store list and the map
     if hasDriveThru == 'y':
         df = df.loc[df['Features - Stations'] == "Drive-Through"]
+        if df.empty is True:
+            print("Error. No stores are found \n")
+            return
     else:
         df = df.loc[df['Features - Stations'] != "Drive-Through"]
+        if df.empty is True:
+            print("Error. No stores are found \n")
+            return
+    # if no stores are found, print a message,
+
+    # otherwise print the list and the map
     dfDisplay(df)
     displayMap(df)
 
@@ -212,16 +220,16 @@ def findStoresWithinDistanceZip(dfStores):
     try:
         lat,long = latlongbyzipsearch(zip)
         data = search.by_coordinates(lat,long,radius=miles,returns=0)
-    except:
+    except Exception:
         print("Error. Invalid Zipcode\n")
         return
     #find all zipcode within the radius
     #add them to a list
-    list = []
+    ziplist = []
     for i in data:
         a = i.to_dict()
-        list.append(a["zipcode"])
-    df = dfStores[dfStores["Zip"].str.contains("|".join(list),na=False)].copy()
+        ziplist.append(a["zipcode"])
+    df = dfStores[dfStores["Zip"].str.contains("|".join(ziplist),na=False)].copy()
 # calculate the distance from each store to the home city/state,
     distances = []
     for row in df.iterrows():
