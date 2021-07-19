@@ -1,11 +1,4 @@
-"""
-Class: CS2230 -- Section 001
-Name: Phan Anh Nguyen
-Description: Hơmework 7 - Starbucks Store finder
-I pledge that I have completed the programming assignment independently.
-I have not copied the code from a student or any source.
-I have not given my code to any student.
-"""
+
 import pandas as pd
 from pandas import DataFrame, read_csv
 import os
