@@ -6,4 +6,4 @@ This is the project I did in college as final exam. I built a program that allow
 You can run starbucks.py to see. I will learn to create a webapp that allows you to run online in the future.   
 Here is what the map looks like   
 
-![img](/img_example.jpeg)
+![img](/img_example.jpg)
