@@ -1,5 +1,5 @@
 # starbucks-locator
-***Starbucks_locator can locate all the Starbucks based on search criteria***   
+*Starbucks_locator can locate all the Starbucks based on search criteria*   
 
 This is the project I did in college as final exam. I built a program that allows user to locate starbucks around them by inputting in their zipcode, city and the radius in miles they want to show. The program will return a map with all the locations it found, also identifying whether the location has drive-through.   
 
